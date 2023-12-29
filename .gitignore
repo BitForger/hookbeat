@@ -262,3 +262,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+/monitors.sqlite
+/app.js
