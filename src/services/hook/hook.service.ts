@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Hook} from "../../db/models/hook.model";
 import {nanoid} from "nanoid";
@@ -9,8 +9,8 @@ import {InjectPinoLogger, PinoLogger} from 'nestjs-pino';
 @Injectable()
 export class HookService {
 
-    private host: string
-    private tokenSalt: string
+    private readonly host: string
+    private readonly tokenSalt: string
     constructor(
       @InjectModel(Hook) private hookModel: typeof Hook,
       private readonly configService: ConfigService,
