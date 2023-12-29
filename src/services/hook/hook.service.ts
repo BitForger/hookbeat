@@ -33,7 +33,7 @@ export class HookService {
 
         let token: string = null;
         try {
-            token = crypto.pbkdf2Sync(id, this.tokenSalt, 1024, 128, 'sha1').toString('base64')
+            token = this.getToken(id)
         } catch (e) {
             this.logger.error({
                 msg: 'failed to generate token',
@@ -46,9 +46,13 @@ export class HookService {
         }
 
         return {
-            hook: `http://${this.host}/hook/${id}`,
+            hook: `http://${this.host}/hooks/${id}`,
             description,
             token,
         }
+    }
+
+    getToken(id: string) {
+        return crypto.pbkdf2Sync(id, this.tokenSalt, 1024, 128, 'sha512').toString('base64')
     }
 }

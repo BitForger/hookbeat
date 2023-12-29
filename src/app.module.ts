@@ -14,7 +14,8 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
       imports: [ConfigModule],
       inject: [ConfigService],
       async useFactory(configService: ConfigService) {
-        const transport = configService.get('NODE_ENV') as string === 'development' && {
+        const nodeEnv = configService.get('NODE_ENV')
+        const transport = nodeEnv === 'development' && {
           target: 'pino-pretty',
           options: {
             colorize: true
@@ -23,7 +24,8 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
         return {
           pinoHttp: {
             genReqId: req => req.id = nanoid(10),
-            transport: transport
+            transport: transport,
+            level: nodeEnv === 'development' ? 'debug' : 'info'
           }
         }
       }
