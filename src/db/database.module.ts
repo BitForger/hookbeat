@@ -2,6 +2,7 @@ import {Module} from "@nestjs/common";
 import {SequelizeModule} from "@nestjs/sequelize";
 import {Hook} from "./models/hook.model";
 import {ConfigModule, ConfigService} from '@nestjs/config';
+import {Heartbeat} from './models/heartbeat.model';
 
 
 @Module({
@@ -25,7 +26,7 @@ import {ConfigModule, ConfigService} from '@nestjs/config';
         }
       }
     }),
-    SequelizeModule.forFeature([Hook])
+    SequelizeModule.forFeature([Hook, Heartbeat])
   ],
   providers: [],
   exports: [SequelizeModule]

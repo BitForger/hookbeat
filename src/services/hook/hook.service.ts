@@ -5,6 +5,7 @@ import {nanoid} from "nanoid";
 import {ConfigService} from '@nestjs/config';
 import * as crypto from 'crypto';
 import {InjectPinoLogger, PinoLogger} from 'nestjs-pino';
+import {Heartbeat} from '../../db/models/heartbeat.model';
 
 @Injectable()
 export class HookService {
@@ -14,7 +15,8 @@ export class HookService {
     constructor(
       @InjectModel(Hook) private hookModel: typeof Hook,
       private readonly configService: ConfigService,
-      @InjectPinoLogger() private readonly logger: PinoLogger
+      @InjectPinoLogger() private readonly logger: PinoLogger,
+      @InjectModel(Heartbeat) private heartbeatModel: typeof Heartbeat
     ) {
         this.host = configService.get('DOMAIN_ROOT')
         this.tokenSalt = configService.get('TOKEN_SALT')
@@ -54,5 +56,21 @@ export class HookService {
 
     getToken(id: string) {
         return crypto.pbkdf2Sync(id, this.tokenSalt, 1024, 128, 'sha512').toString('base64')
+    }
+
+    async addHeartbeat(id: string) {
+        await this.heartbeatModel.create({timestamp: Date.now(), up: true, hookId: id})
+    }
+
+    async updateHook(id: string, params: { description: string }) {
+        const hook = await this.hookModel.findOne({
+            where: {
+                uniqueId: id,
+            }
+        })
+
+        await hook.update("description", params.description)
+
+        return true
     }
 }

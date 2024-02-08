@@ -1,6 +1,19 @@
-import {Body, Controller, Headers, HttpCode, HttpException, HttpStatus, Param, Post} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  UseGuards
+} from '@nestjs/common';
 import {HookService} from "../../services/hook/hook.service";
 import {InjectPinoLogger, PinoLogger} from "nestjs-pino";
+import {HookAuthGuard} from '../../core/guards/hook-auth/hook-auth.guard';
+import {UpdateHookDto} from './UpdateHookDto';
 
 @Controller('hooks')
 export class HooksController {
@@ -31,13 +44,14 @@ export class HooksController {
   // a token with the passed id
   // heartbeat controller
   // POST /:id
-
   @Post('/:id')
+  @UseGuards(HookAuthGuard)
   async heartbeat(
     @Param('id') id: string,
     @Headers('Authorization') authHeader: string
   ) {
     const token = this.hookService.getToken(id)
+    await this.hookService.addHeartbeat(id)
     this.logger.debug({
       msg: 'tokens',
       token,
@@ -48,6 +62,16 @@ export class HooksController {
 
   // Update hook
   // PUT /:id
+  @Put('/:id')
+  @UseGuards(HookAuthGuard)
+  async updateHook(
+    @Param('id') id: string,
+    @Body() body: UpdateHookDto
+  ) {
+    if (body?.description) {
+      await this.hookService.updateHook(id, {description: body.description})
+    }
+  }
 
   // Delete hook
   // DELETE /:id
