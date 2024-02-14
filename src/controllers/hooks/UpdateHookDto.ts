@@ -1,8 +1,8 @@
-import {IsBoolean, IsString} from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UpdateHookDto {
   @IsString()
-  description?: string
+  description?: string;
 
   // @IsBoolean()
   // regenToken?: boolean
