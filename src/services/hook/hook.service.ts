@@ -1,11 +1,11 @@
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {Hook} from '../../db/models/hook.model';
-import {nanoid} from 'nanoid';
-import {ConfigService} from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Hook } from '../../db/models/hook.model';
+import { nanoid } from 'nanoid';
+import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
-import {InjectPinoLogger, PinoLogger} from 'nestjs-pino';
-import {Heartbeat} from '../../db/models/heartbeat.model';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { Heartbeat } from '../../db/models/heartbeat.model';
 
 @Injectable()
 export class HookService {
